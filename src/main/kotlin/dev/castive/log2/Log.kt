@@ -1,3 +1,20 @@
+/*
+ *    Copyright 2019 Django Cass
+ *
+ *    Licensed under the Apache License, Version 2.0 (the "License");
+ *    you may not use this file except in compliance with the License.
+ *    You may obtain a copy of the License at
+ *
+ *        http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *    Unless required by applicable law or agreed to in writing, software
+ *    distributed under the License is distributed on an "AS IS" BASIS,
+ *    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *    See the License for the specific language governing permissions and
+ *    limitations under the License.
+ *
+ */
+
 package dev.castive.log2
 
 import java.text.SimpleDateFormat
@@ -53,16 +70,14 @@ object Log {
 
     private fun log(name: String, msg: String, priority: Int, colour: String? = null) {
         if(priorityLevel > priority) return
-        if(colour == null) {
-            "${timeFormat.format(System.currentTimeMillis())} | [${Thread.currentThread().name}] |-${priorities[priority]} in $name - $msg"
-            return
-        }
+        println(getMessage(name, msg, priority, colour))
+    }
+
+    internal fun getMessage(name: String, msg: String, priority: Int, colour: String? = null): String {
+        if(colour == null) return "${timeFormat.format(System.currentTimeMillis())} | [${Thread.currentThread().name}] |-${priorities[priority]} in $name - $msg"
         // Display with pretty colours
-        println(if(USE_SHORT_COLOURS) {
-            "${timeFormat.format(System.currentTimeMillis())} | [${Thread.currentThread().name}] |-$colour${priorities[priority]}$ANSI_RESET in $name - $msg"
-        } else {
-            "$colour${timeFormat.format(System.currentTimeMillis())} | [${Thread.currentThread().name}] |-${priorities[priority]} in $name - $msg$ANSI_RESET"
-        })
+        return if(USE_SHORT_COLOURS) "${timeFormat.format(System.currentTimeMillis())} | [${Thread.currentThread().name}] |-$colour${priorities[priority]}$ANSI_RESET in $name - $msg"
+        else "$colour${timeFormat.format(System.currentTimeMillis())} | [${Thread.currentThread().name}] |-${priorities[priority]} in $name - $msg$ANSI_RESET"
     }
 
     public fun setPriorityLevel(level: Int) {
