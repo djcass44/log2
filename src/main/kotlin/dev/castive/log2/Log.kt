@@ -21,6 +21,18 @@ import java.text.SimpleDateFormat
 import java.util.*
 
 object Log {
+    object Priority {
+        const val VERBOSE = "VERBOSE"
+        const val DEBUG = "DEBUG"
+        const val INFO = "INFO"
+        const val OK = "OK"
+        const val GOOD = "GOOD"
+        const val WARNING = "WARNING"
+        const val ERROR = "ERROR"
+        const val FATAL = "FATAL"
+        const val SILENT = "SILENT"
+    }
+
     const val ANSI_RESET = "\u001B[0m"
 
     // Text colours
@@ -43,30 +55,161 @@ object Log {
     const val ANSI_CYAN_BACKGROUND = "\u001B[46m"
     const val ANSI_WHITE_BACKGROUND = "\u001B[47m"
 
+    /**
+     * Toggle whether the console colours should be limited only to the level name
+     * E.g. 1970-01-01 **WARNING** An error occurred! if enabled versus
+     *      **1970-01-01 WARNING An error occurred!** when disabled
+     */
     public var USE_SHORT_COLOURS = true
     private var priorityLevel = 0
     private val priorities = arrayOf(
-        "VERBOSE",
-        "DEBUG",
-        "INFO",
-        "OK",
-        "GOOD",
-        "WARNING",
-        "ERROR",
-        "FATAL",
-        "SILENT"
+        Priority.VERBOSE,
+        Priority.DEBUG,
+        Priority.INFO,
+        Priority.OK,
+        Priority.GOOD,
+        Priority.WARNING,
+        Priority.ERROR,
+        Priority.FATAL,
+        Priority.SILENT
     )
     private val timeFormat = SimpleDateFormat("yyyy-MM-dd HH:mm:ss SSS", Locale.getDefault())
 
-    public fun v(src: Class<Any>, msg: String) = log(src.name, msg, 0)
-    public fun d(src: Class<Any>, msg: String) = log(src.name, msg, 1)
-    public fun i(src: Class<Any>, msg: String) = log(src.name, msg, 2)
-    public fun ok(src: Class<Any>, msg: String) = log(src.name, msg, 3, ANSI_GREEN)
-    public fun good(src: Class<Any>, msg: String) = log(src.name, msg, 4, ANSI_GREEN_BACKGROUND)
-    public fun w(src: Class<Any>, msg: String) = log(src.name, msg, 5, ANSI_YELLOW)
-    public fun e(src: Class<Any>, msg: String) = log(src.name, msg, 6, ANSI_RED)
-    public fun f(src: Class<Any>, msg: String) = log(src.name, msg, 7, ANSI_RED_BACKGROUND)
-    public fun s(src: Class<Any>, msg: String) = log(src.name, msg, 8, ANSI_WHITE_BACKGROUND)
+    /**
+     * Show a verbose message
+     *
+     * @param src Calling class
+     * @param msg Message to show
+     */
+    public fun v(src: Class<out Any>, msg: String) = v(src.name, msg)
+    /**
+     * Show a debug message
+     *
+     * @param src Calling class
+     * @param msg Message to show
+     */
+    public fun d(src: Class<out Any>, msg: String) = d(src.name, msg)
+    /**
+     * Show an information message
+     *
+     * @param src Calling class
+     * @param msg Message to show
+     */
+    public fun i(src: Class<out Any>, msg: String) = i(src.name, msg)
+    /**
+     * Show an ok message
+     * Indicates that something is working
+     *
+     * @param src Calling class
+     * @param msg Message to show
+     */
+    public fun ok(src: Class<out Any>, msg: String) = ok(src.name, msg)
+    /**
+     * Show a good message
+     * Indicates that a task completed correctly or something went as expected
+     *
+     * @param src Calling class
+     * @param msg Message to show
+     */
+    public fun good(src: Class<out Any>, msg: String) = good(src.name, msg)
+    /**
+     * Show a warning message
+     *
+     * @param src Calling class
+     * @param msg Message to show
+     */
+    public fun w(src: Class<out Any>, msg: String) = w(src.name, msg)
+    /**
+     * Show an error message
+     *
+     * @param src Calling class
+     * @param msg Message to show
+     */
+    public fun e(src: Class<out Any>, msg: String) = e(src.name, msg)
+    /**
+     * Show a fatal message
+     * Fatal messages indicate critical failure that cannot be recovered from
+     *
+     * @param src Calling class
+     * @param msg Message to show
+     */
+    public fun f(src: Class<out Any>, msg: String) = f(src.name, msg)
+    /**
+     * Show a silent message
+     * Silent messages are always shown and cannot be hidden.
+     *
+     * @param src Calling class
+     * @param msg Message to show
+     */
+    public fun s(src: Class<out Any>, msg: String) = s(src.name, msg)
+
+    /**
+     * Show a verbose message
+     *
+     * @param src Calling classname or other indication of source
+     * @param msg Message to show
+     */
+    public fun v(src: String, msg: String) = log(src, msg, 0)
+    /**
+     * Show a debug message
+     * Indicates that something is working
+     *
+     * @param src Calling classname or other indication of source
+     * @param msg Message to show
+     */
+    public fun d(src: String, msg: String) = log(src, msg, 1)
+    /**
+     * Show an information message
+     *
+     * @param src Calling classname or other indication of source
+     * @param msg Message to show
+     */
+    public fun i(src: String, msg: String) = log(src, msg, 2)
+    /**
+     * Show an ok message
+     *
+     * @param src Calling classname or other indication of source
+     * @param msg Message to show
+     */
+    public fun ok(src: String, msg: String) = log(src, msg, 3, ANSI_GREEN)
+    /**
+     * Show a good message
+     *
+     * @param src Calling classname or other indication of source
+     * @param msg Message to show
+     */
+    public fun good(src: String, msg: String) = log(src, msg, 4, ANSI_GREEN_BACKGROUND)
+    /**
+     * Show a warning message
+     * Indicates that a task completed correctly or something went as expected
+     *
+     * @param src Calling classname or other indication of source
+     * @param msg Message to show
+     */
+    public fun w(src: String, msg: String) = log(src, msg, 5, ANSI_YELLOW)
+    /**
+     * Show an error message
+     *
+     * @param src Calling classname or other indication of source
+     * @param msg Message to show
+     */
+    public fun e(src: String, msg: String) = log(src, msg, 6, ANSI_RED)
+    /**
+     * Show a fatal message
+     * Fatal messages indicate critical failure that cannot be recovered from
+     *
+     * @param src Calling classname or other indication of source
+     * @param msg Message to show
+     */
+    public fun f(src: String, msg: String) = log(src, msg, 7, ANSI_RED_BACKGROUND)
+    /**
+     * Show a silent message
+     * Silent messages are always shown and cannot be hidden.
+     *
+     * @param src Calling classname or other indication of source
+     * @param msg Message to show
+     */
+    public fun s(src: String, msg: String) = log(src, msg, 8, ANSI_WHITE_BACKGROUND)
 
     private fun log(name: String, msg: String, priority: Int, colour: String? = null) {
         if(priorityLevel > priority) return
@@ -80,15 +223,32 @@ object Log {
         else "$colour${timeFormat.format(System.currentTimeMillis())} | [${Thread.currentThread().name}] |-${priorities[priority]} in $name - $msg$ANSI_RESET"
     }
 
+    /**
+     * Set the level which to cutoff log messages
+     *
+     * @param level level of which logs below are cut off. Lower is more detailed logging
+     */
     public fun setPriorityLevel(level: Int) {
         priorityLevel = level
         if(priorityLevel > 8) priorityLevel = 8
         else if(priorityLevel < 0) priorityLevel = 0
-        i(javaClass, "Log priority cutoff set to $priorityLevel")
+        i(javaClass.name, "Log priority cutoff set to $priorityLevel")
     }
+
+    /**
+     * Get the current log cutoff
+     *
+     * @return Int value of the cutoff level
+     */
     public fun getPriorityLevel(): Int {
         return priorityLevel
     }
+
+    /**
+     * Set the level which to cutoff log messages by name
+     *
+     * @param name the name of the log level to set as the minimum
+     */
     public fun setPriority(name: String) {
         for ((i, p) in priorities.withIndex()) {
             if(p != name) continue
@@ -96,9 +256,21 @@ object Log {
             break // We've found what we're looking for, no need to finish the loop
         }
     }
+
+    /**
+     * Get the name of the current log cutoff
+     *
+     * @return String containing the name
+     */
     public fun getPriority(): String {
         return priorities[priorityLevel]
     }
+
+    /**
+     * Get the names of all log levels
+     *
+     * @return Array of String's containing each level
+     */
     public fun getNames(): Array<String> = priorities
 
 }
