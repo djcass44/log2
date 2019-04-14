@@ -3,7 +3,7 @@ name: default
 
 steps:
 - name: build
-  image: 5.3-jdk11-slim
+  image: azul/zulu-openjdk-alpine:11
   commands:
-  - gradle assemble
-  - gradle test
+  - ./gradlew assemble
+  - ./gradlew test
