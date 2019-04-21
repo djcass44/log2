@@ -27,6 +27,7 @@ object Log {
         const val INFO = "INFO"
         const val OK = "OK"
         const val GOOD = "GOOD"
+        const val ALERT = "ALERT"
         const val WARNING = "WARNING"
         const val ERROR = "ERROR"
         const val FATAL = "FATAL"
@@ -68,6 +69,7 @@ object Log {
         Priority.INFO,
         Priority.OK,
         Priority.GOOD,
+        Priority.ALERT,
         Priority.WARNING,
         Priority.ERROR,
         Priority.FATAL,
@@ -112,6 +114,14 @@ object Log {
      * @param msg Message to show
      */
     public fun good(src: Class<out Any>, msg: String) = good(src.name, msg)
+    /**
+     * Show an alert message
+     * Useful for highlighting something to the user
+     *
+     * @param src Calling class
+     * @param msg Message to show
+     */
+    public fun a(src: Class<out Any>, msg: String) = a(src.name, msg)
     /**
      * Show a warning message
      *
@@ -180,20 +190,28 @@ object Log {
      */
     public fun good(src: String, msg: String) = log(src, msg, 4, ANSI_GREEN_BACKGROUND)
     /**
+     * Show an alert message
+     * Useful for highlighting something to the user
+     *
+     * @param src Calling classname or other indication of source
+     * @param msg Message to show
+     */
+    public fun a(src: String, msg: String) = log(src, msg, 5, ANSI_YELLOW_BACKGROUND)
+    /**
      * Show a warning message
      * Indicates that a task completed correctly or something went as expected
      *
      * @param src Calling classname or other indication of source
      * @param msg Message to show
      */
-    public fun w(src: String, msg: String) = log(src, msg, 5, ANSI_YELLOW)
+    public fun w(src: String, msg: String) = log(src, msg, 6, ANSI_YELLOW)
     /**
      * Show an error message
      *
      * @param src Calling classname or other indication of source
      * @param msg Message to show
      */
-    public fun e(src: String, msg: String) = log(src, msg, 6, ANSI_RED)
+    public fun e(src: String, msg: String) = log(src, msg, 7, ANSI_RED)
     /**
      * Show a fatal message
      * Fatal messages indicate critical failure that cannot be recovered from
@@ -201,7 +219,7 @@ object Log {
      * @param src Calling classname or other indication of source
      * @param msg Message to show
      */
-    public fun f(src: String, msg: String) = log(src, msg, 7, ANSI_RED_BACKGROUND)
+    public fun f(src: String, msg: String) = log(src, msg, 8, ANSI_RED_BACKGROUND)
     /**
      * Show a silent message
      * Silent messages are always shown and cannot be hidden.
@@ -209,7 +227,7 @@ object Log {
      * @param src Calling classname or other indication of source
      * @param msg Message to show
      */
-    public fun s(src: String, msg: String) = log(src, msg, 8, ANSI_WHITE_BACKGROUND)
+    public fun s(src: String, msg: String) = log(src, msg, 9, ANSI_WHITE_BACKGROUND)
 
     private fun log(name: String, msg: String, priority: Int, colour: String? = null) {
         if(priorityLevel > priority) return
@@ -230,7 +248,7 @@ object Log {
      */
     public fun setPriorityLevel(level: Int) {
         priorityLevel = level
-        if(priorityLevel > 8) priorityLevel = 8
+        if(priorityLevel >= priorities.size) priorityLevel = priorities.size - 1
         else if(priorityLevel < 0) priorityLevel = 0
         i(javaClass.name, "Log priority cutoff set to $priorityLevel")
     }
