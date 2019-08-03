@@ -224,7 +224,8 @@ object Log {
                 // Remove the default handlers
                 this.handlers.forEach { h -> this.removeHandler(h) }
                 // Add our custom handler
-                this.addHandler(LogHandler())
+                addHandler(LogHandler())
+                useParentHandlers = false
             }
             handlers[name] = newLogger
             return@run newLogger
