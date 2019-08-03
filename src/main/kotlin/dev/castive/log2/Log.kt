@@ -17,9 +17,10 @@
 
 package dev.castive.log2
 
-import java.text.SimpleDateFormat
-import java.util.*
+import java.util.logging.Level
+import java.util.logging.Logger
 
+@Suppress("RedundantVisibilityModifier", "MemberVisibilityCanBePrivate")
 object Log {
     object Priority {
         const val VERBOSE = "VERBOSE"
@@ -37,32 +38,18 @@ object Log {
     const val ANSI_RESET = "\u001B[0m"
 
     // Text colours
-    const val ANSI_BLACK = "\u001B[30m"
-    const val ANSI_RED = "\u001B[31m"
-    const val ANSI_GREEN = "\u001B[32m"
-    const val ANSI_YELLOW = "\u001B[33m"
-    const val ANSI_BLUE = "\u001B[34m"
-    const val ANSI_PURPLE = "\u001B[35m"
-    const val ANSI_CYAN = "\u001B[36m"
-    const val ANSI_WHITE = "\u001B[37m"
+    private const val ANSI_RED = "\u001B[31m"
+    private const val ANSI_GREEN = "\u001B[32m"
+    private const val ANSI_YELLOW = "\u001B[33m"
 
     // Background colours
-    const val ANSI_BLACK_BACKGROUND = "\u001B[40m"
-    const val ANSI_RED_BACKGROUND = "\u001B[41m"
-    const val ANSI_GREEN_BACKGROUND = "\u001B[42m"
-    const val ANSI_YELLOW_BACKGROUND = "\u001B[43m"
-    const val ANSI_BLUE_BACKGROUND = "\u001B[44m"
-    const val ANSI_PURPLE_BACKGROUND = "\u001B[45m"
-    const val ANSI_CYAN_BACKGROUND = "\u001B[46m"
-    const val ANSI_WHITE_BACKGROUND = "\u001B[47m"
+    private const val ANSI_WHITE_BACKGROUND = "\u001B[47m"
 
     /**
      * Toggle whether the console colours should be limited only to the level name
      * E.g. 1970-01-01 **WARNING** An error occurred! if enabled versus
      *      **1970-01-01 WARNING An error occurred!** when disabled
      */
-    public var USE_SHORT_COLOURS = true
-    private var priorityLevel = 0
     private val priorities = arrayOf(
         Priority.VERBOSE,
         Priority.DEBUG,
@@ -75,7 +62,8 @@ object Log {
         Priority.FATAL,
         Priority.SILENT
     )
-    private val timeFormat = SimpleDateFormat("yyyy-MM-dd HH:mm:ss SSS", Locale.getDefault())
+    // Stores active log handlers
+    private val handlers = hashMapOf<String, Logger>()
 
     /**
      * Show a verbose message
@@ -159,7 +147,7 @@ object Log {
      * @param src Calling classname or other indication of source
      * @param msg Message to show
      */
-    public fun v(src: String, msg: String) = log(src, msg, 0)
+    public fun v(src: String, msg: String) = log(src, msg, Level.FINER)
     /**
      * Show a debug message
      * Indicates that something is working
@@ -167,28 +155,28 @@ object Log {
      * @param src Calling classname or other indication of source
      * @param msg Message to show
      */
-    public fun d(src: String, msg: String) = log(src, msg, 1)
+    public fun d(src: String, msg: String) = log(src, msg, Level.FINEST)
     /**
      * Show an information message
      *
      * @param src Calling classname or other indication of source
      * @param msg Message to show
      */
-    public fun i(src: String, msg: String) = log(src, msg, 2)
+    public fun i(src: String, msg: String) = log(src, msg, Level.INFO)
     /**
      * Show an ok message
      *
      * @param src Calling classname or other indication of source
      * @param msg Message to show
      */
-    public fun ok(src: String, msg: String) = log(src, msg, 3, ANSI_GREEN)
+    public fun ok(src: String, msg: String) = log(src, msg, Level.INFO, ANSI_GREEN)
     /**
      * Show a good message
      *
      * @param src Calling classname or other indication of source
      * @param msg Message to show
      */
-    public fun good(src: String, msg: String) = log(src, msg, 4, ANSI_GREEN_BACKGROUND)
+    public fun good(src: String, msg: String) = log(src, msg, Level.INFO, ANSI_GREEN)
     /**
      * Show an alert message
      * Useful for highlighting something to the user
@@ -196,7 +184,7 @@ object Log {
      * @param src Calling classname or other indication of source
      * @param msg Message to show
      */
-    public fun a(src: String, msg: String) = log(src, msg, 5, ANSI_YELLOW_BACKGROUND)
+    public fun a(src: String, msg: String) = log(src, msg, Level.WARNING, ANSI_YELLOW)
     /**
      * Show a warning message
      * Indicates that a task completed correctly or something went as expected
@@ -204,14 +192,14 @@ object Log {
      * @param src Calling classname or other indication of source
      * @param msg Message to show
      */
-    public fun w(src: String, msg: String) = log(src, msg, 6, ANSI_YELLOW)
+    public fun w(src: String, msg: String) = log(src, msg, Level.WARNING, ANSI_YELLOW)
     /**
      * Show an error message
      *
      * @param src Calling classname or other indication of source
      * @param msg Message to show
      */
-    public fun e(src: String, msg: String) = log(src, msg, 7, ANSI_RED)
+    public fun e(src: String, msg: String) = log(src, msg, Level.WARNING, ANSI_RED)
     /**
      * Show a fatal message
      * Fatal messages indicate critical failure that cannot be recovered from
@@ -219,7 +207,7 @@ object Log {
      * @param src Calling classname or other indication of source
      * @param msg Message to show
      */
-    public fun f(src: String, msg: String) = log(src, msg, 8, ANSI_RED_BACKGROUND)
+    public fun f(src: String, msg: String) = log(src, msg, Level.SEVERE, ANSI_RED)
     /**
      * Show a silent message
      * Silent messages are always shown and cannot be hidden.
@@ -227,61 +215,21 @@ object Log {
      * @param src Calling classname or other indication of source
      * @param msg Message to show
      */
-    public fun s(src: String, msg: String) = log(src, msg, 9, ANSI_WHITE_BACKGROUND)
+    public fun s(src: String, msg: String) = log(src, msg, Level.SEVERE, ANSI_WHITE_BACKGROUND)
 
-    private fun log(name: String, msg: String, priority: Int, colour: String? = null) {
-        if(priorityLevel > priority) return
-        println(getMessage(name, msg, priority, colour))
-    }
-
-    internal fun getMessage(name: String, msg: String, priority: Int, colour: String? = null): String {
-        if(colour == null) return "${timeFormat.format(System.currentTimeMillis())} | [${Thread.currentThread().name}] |-${priorities[priority]} in $name - $msg"
-        // Display with pretty colours
-        return if(USE_SHORT_COLOURS) "${timeFormat.format(System.currentTimeMillis())} | [${Thread.currentThread().name}] |-$colour${priorities[priority]}$ANSI_RESET in $name - $msg"
-        else "$colour${timeFormat.format(System.currentTimeMillis())} | [${Thread.currentThread().name}] |-${priorities[priority]} in $name - $msg$ANSI_RESET"
-    }
-
-    /**
-     * Set the level which to cutoff log messages
-     *
-     * @param level level of which logs below are cut off. Lower is more detailed logging
-     */
-    public fun setPriorityLevel(level: Int) {
-        priorityLevel = level
-        if(priorityLevel >= priorities.size) priorityLevel = priorities.size - 1
-        else if(priorityLevel < 0) priorityLevel = 0
-        i(javaClass.name, "Log priority cutoff set to $priorityLevel")
-    }
-
-    /**
-     * Get the current log cutoff
-     *
-     * @return Int value of the cutoff level
-     */
-    public fun getPriorityLevel(): Int {
-        return priorityLevel
-    }
-
-    /**
-     * Set the level which to cutoff log messages by name
-     *
-     * @param name the name of the log level to set as the minimum
-     */
-    public fun setPriority(name: String) {
-        for ((i, p) in priorities.withIndex()) {
-            if(p != name) continue
-            setPriorityLevel(i)
-            break // We've found what we're looking for, no need to finish the loop
+    private fun log(name: String, msg: String, level: Level, colour: String? = null) {
+        val logger = handlers[name] ?: run {
+            // We couldn't find an existing logger, so lets make a new one
+            val newLogger = Logger.getLogger(name).apply {
+                // Remove the default handlers
+                this.handlers.forEach { h -> this.removeHandler(h) }
+                // Add our custom handler
+                this.addHandler(LogHandler())
+            }
+            handlers[name] = newLogger
+            return@run newLogger
         }
-    }
-
-    /**
-     * Get the name of the current log cutoff
-     *
-     * @return String containing the name
-     */
-    public fun getPriority(): String {
-        return priorities[priorityLevel]
+        logger.log(level, msg, colour)
     }
 
     /**
