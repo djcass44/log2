@@ -41,6 +41,6 @@ class LogFormat: SimpleFormatter() {
     override fun format(record: LogRecord?): String {
         if(record == null) return ""
         val colour = if(record.parameters.isNotEmpty() && record.parameters[0] != null) record.parameters[0] else ""
-        return "${sdf.format(record.millis)} | [${record.threadID}] |-$colour${record.level.localizedName}${Log.ANSI_RESET} in ${record.sourceClassName} - ${record.message}${Log.ANSI_RESET}\n"
+        return "${sdf.format(record.millis)} | [${record.threadID}] |-$colour${record.level.localizedName}${Log.ANSI_RESET} in ${record.loggerName} - ${record.message}${Log.ANSI_RESET}\n"
     }
 }
