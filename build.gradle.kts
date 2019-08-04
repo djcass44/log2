@@ -46,6 +46,10 @@ configure<JavaPluginConvention> {
     targetCompatibility = JavaVersion.VERSION_11
 }
 tasks {
+    withType<Wrapper> {
+        gradleVersion = "5.2"
+        distributionType = Wrapper.DistributionType.BIN
+    }
     withType<KotlinCompile>().all {
         kotlinOptions.jvmTarget = "11"
     }
