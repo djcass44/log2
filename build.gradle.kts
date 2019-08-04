@@ -18,28 +18,50 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
-    kotlin("jvm") version "1.3.30"
+    kotlin("jvm") version "1.3.31"
+    java
     maven
 }
 
 group = "dev.castive"
 version = "3.0"
+val moduleName by extra("dev.castive.log2")
+val javaHome = System.getProperty("java.home")
 
 repositories {
+    maven(url = "https://jitpack.io")
     mavenCentral()
+    jcenter()
 }
 
 dependencies {
-    implementation(kotlin("stdlib-jdk8"))
+    api("org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.3.31:modular")
 
     testImplementation("org.junit.jupiter:junit-jupiter-api:5.2.0")
     testImplementation("org.junit.jupiter:junit-jupiter-params:5.2.0")
     testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.2.0")
 }
-
-tasks.withType<KotlinCompile>().all {
-    kotlinOptions.jvmTarget = "1.8"
+configure<JavaPluginConvention> {
+    sourceCompatibility = JavaVersion.VERSION_11
+    targetCompatibility = JavaVersion.VERSION_11
 }
-tasks.withType<Test> {
-    useJUnitPlatform()
+tasks {
+    withType<KotlinCompile>().all {
+        kotlinOptions.jvmTarget = "11"
+    }
+    withType<JavaCompile>().all {
+        inputs.property("moduleName", moduleName)
+        doFirst {
+            options.compilerArgs = listOf(
+                "--module-path", classpath.asPath,
+                "--patch-module", "$moduleName=${sourceSets["main"].output.asPath}"
+            )
+            classpath = files()
+        }
+    }
+    val jar by getting(Jar::class)
+
+    withType<Test> {
+        useJUnitPlatform()
+    }
 }
