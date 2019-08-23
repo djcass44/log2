@@ -1,0 +1,34 @@
+/*
+ *    Copyright 2019 Django Cass
+ *
+ *    Licensed under the Apache License, Version 2.0 (the "License");
+ *    you may not use this file except in compliance with the License.
+ *    You may obtain a copy of the License at
+ *
+ *        http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *    Unless required by applicable law or agreed to in writing, software
+ *    distributed under the License is distributed on an "AS IS" BASIS,
+ *    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *    See the License for the specific language governing permissions and
+ *    limitations under the License.
+ *
+ */
+
+@file:Suppress("RedundantVisibilityModifier", "unused", "SpellCheckingInspection")
+
+package dev.castive.log2
+
+/**
+ * Contains Kotlin extensions
+ */
+public fun String.logv(src: Class<out Any>) = Log.v(src.name, this)
+public fun String.logd(src: Class<out Any>) = Log.d(src.name, this)
+public fun String.logi(src: Class<out Any>) = Log.i(src.name, this)
+public fun String.logok(src: Class<out Any>) = Log.ok(src.name, this)
+public fun String.logg(src: Class<out Any>) = Log.good(src.name, this)
+public fun String.loga(src: Class<out Any>) = Log.a(src.name, this)
+public fun String.logw(src: Class<out Any>) = Log.w(src.name, this)
+public fun String.loge(src: Class<out Any>) = Log.e(src.name, this)
+public fun String.logf(src: Class<out Any>) = Log.f(src.name, this)
+public fun String.logs(src: Class<out Any>) = Log.s(src.name, this)

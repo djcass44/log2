@@ -1,5 +1,4 @@
 # LOG2
-[![Build Status](https://ci.castive.dev/api/badges/djcass44/log2/status.svg)](https://ci.castive.dev/djcass44/log2)
 
 Log2 is a simple library for showing pretty log statements.
 

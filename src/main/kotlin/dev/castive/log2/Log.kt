@@ -217,7 +217,7 @@ object Log {
      */
     public fun s(src: String, msg: String) = log(src, msg, Level.SEVERE, ANSI_WHITE_BACKGROUND)
 
-    private fun log(name: String, msg: String, level: Level, colour: String? = null) {
+    internal fun log(name: String, msg: String, level: Level, colour: String? = null) {
         val logger = handlers[name] ?: run {
             // We couldn't find an existing logger, so lets make a new one
             val newLogger = Logger.getLogger(name).apply {
