@@ -31,154 +31,174 @@ object Log {
      *
      * @param src Calling class
      * @param msg Message to show
+     * @param t the exception (throwable) to log
      */
-    fun v(src: Class<out Any>, msg: String) = v(src.name, msg)
+    fun v(src: Class<out Any>, msg: String, t: Throwable? = null) = v(src.name, msg, t)
     /**
      * Show a debug message
      *
      * @param src Calling class
      * @param msg Message to show
+     * @param t the exception (throwable) to log
      */
-    fun d(src: Class<out Any>, msg: String) = d(src.name, msg)
+    fun d(src: Class<out Any>, msg: String, t: Throwable? = null) = d(src.name, msg, t)
     /**
      * Show an information message
      *
      * @param src Calling class
      * @param msg Message to show
+     * @param t the exception (throwable) to log
      */
-    fun i(src: Class<out Any>, msg: String) = i(src.name, msg)
+    fun i(src: Class<out Any>, msg: String, t: Throwable? = null) = i(src.name, msg, t)
     /**
      * Show an ok message
      * Indicates that something is working
      *
      * @param src Calling class
      * @param msg Message to show
+     * @param t the exception (throwable) to log
      */
-    fun ok(src: Class<out Any>, msg: String) = ok(src.name, msg)
+    fun ok(src: Class<out Any>, msg: String, t: Throwable? = null) = ok(src.name, msg, t)
     /**
      * Show a good message
      * Indicates that a task completed correctly or something went as expected
      *
      * @param src Calling class
      * @param msg Message to show
+     * @param t the exception (throwable) to log
      */
-    fun good(src: Class<out Any>, msg: String) = good(src.name, msg)
+    fun good(src: Class<out Any>, msg: String, t: Throwable? = null) = good(src.name, msg, t)
     /**
      * Show an alert message
      * Useful for highlighting something to the user
      *
      * @param src Calling class
      * @param msg Message to show
+     * @param t the exception (throwable) to log
      */
-    fun a(src: Class<out Any>, msg: String) = a(src.name, msg)
+    fun a(src: Class<out Any>, msg: String, t: Throwable? = null) = a(src.name, msg, t)
     /**
      * Show a warning message
      *
      * @param src Calling class
      * @param msg Message to show
+     * @param t the exception (throwable) to log
      */
-    fun w(src: Class<out Any>, msg: String) = w(src.name, msg)
+    fun w(src: Class<out Any>, msg: String, t: Throwable? = null) = w(src.name, msg, t)
     /**
      * Show an error message
      *
      * @param src Calling class
      * @param msg Message to show
+     * @param t the exception (throwable) to log
      */
-    fun e(src: Class<out Any>, msg: String) = e(src.name, msg)
+    fun e(src: Class<out Any>, msg: String, t: Throwable? = null) = e(src.name, msg, t)
     /**
      * Show a fatal message
      * Fatal messages indicate critical failure that cannot be recovered from
      *
      * @param src Calling class
      * @param msg Message to show
+     * @param t the exception (throwable) to log
      */
-    fun f(src: Class<out Any>, msg: String) = f(src.name, msg)
+    fun f(src: Class<out Any>, msg: String, t: Throwable? = null) = f(src.name, msg, t)
     /**
      * Show a silent message
      * Silent messages are always shown and cannot be hidden.
      *
      * @param src Calling class
      * @param msg Message to show
+     * @param t the exception (throwable) to log
      */
-    fun s(src: Class<out Any>, msg: String) = s(src.name, msg)
+    fun s(src: Class<out Any>, msg: String, t: Throwable? = null) = s(src.name, msg, t)
 
     /**
      * Show a verbose message
      *
      * @param src Calling classname or other indication of source
      * @param msg Message to show
+     * @param t the exception (throwable) to log
      */
-    fun v(src: String, msg: String) = log(src, msg, Level.TRACE)
+    fun v(src: String, msg: String, t: Throwable? = null) = log(src, msg, Level.TRACE, t)
     /**
      * Show a debug message
      * Indicates that something is working
      *
      * @param src Calling classname or other indication of source
      * @param msg Message to show
+     * @param t the exception (throwable) to log
      */
-    fun d(src: String, msg: String) = log(src, msg, Level.DEBUG)
+    fun d(src: String, msg: String, t: Throwable? = null) = log(src, msg, Level.DEBUG, t)
     /**
      * Show an information message
      *
      * @param src Calling classname or other indication of source
      * @param msg Message to show
+     * @param t the exception (throwable) to log
      */
-    fun i(src: String, msg: String) = log(src, msg, Level.INFO)
+    fun i(src: String, msg: String, t: Throwable? = null) = log(src, msg, Level.INFO, t)
     /**
      * Show an ok message
      *
      * @param src Calling classname or other indication of source
      * @param msg Message to show
+     * @param t the exception (throwable) to log
      */
-    fun ok(src: String, msg: String) = log(src, msg, Level.INFO)
+    fun ok(src: String, msg: String, t: Throwable? = null) = log(src, msg, Level.INFO, t)
     /**
      * Show a good message
      *
      * @param src Calling classname or other indication of source
      * @param msg Message to show
+     * @param t the exception (throwable) to log
      */
-    fun good(src: String, msg: String) = log(src, msg, Level.INFO)
+    fun good(src: String, msg: String, t: Throwable? = null) = log(src, msg, Level.INFO, t)
     /**
      * Show an alert message
      * Useful for highlighting something to the user
      *
      * @param src Calling classname or other indication of source
      * @param msg Message to show
+     * @param t the exception (throwable) to log
      */
-    fun a(src: String, msg: String) = log(src, msg, Level.WARN)
+    fun a(src: String, msg: String, t: Throwable? = null) = log(src, msg, Level.WARN, t)
     /**
      * Show a warning message
      * Indicates that a task completed correctly or something went as expected
      *
      * @param src Calling classname or other indication of source
      * @param msg Message to show
+     * @param t the exception (throwable) to log
      */
-    fun w(src: String, msg: String) = log(src, msg, Level.WARN)
+    fun w(src: String, msg: String, t: Throwable? = null) = log(src, msg, Level.WARN, t)
     /**
      * Show an error message
      *
      * @param src Calling classname or other indication of source
      * @param msg Message to show
+     * @param t the exception (throwable) to log
      */
-    fun e(src: String, msg: String) = log(src, msg, Level.WARN)
+    fun e(src: String, msg: String, t: Throwable? = null) = log(src, msg, Level.WARN, t)
     /**
      * Show a fatal message
      * Fatal messages indicate critical failure that cannot be recovered from
      *
      * @param src Calling classname or other indication of source
      * @param msg Message to show
+     * @param t the exception (throwable) to log
      */
-    fun f(src: String, msg: String) = log(src, msg, Level.ERROR)
+    fun f(src: String, msg: String, t: Throwable? = null) = log(src, msg, Level.ERROR, t)
     /**
      * Show a silent message
      * Silent messages are always shown and cannot be hidden.
      *
      * @param src Calling classname or other indication of source
      * @param msg Message to show
+     * @param t the exception (throwable) to log
      */
-    fun s(src: String, msg: String) = log(src, msg, Level.ERROR)
+    fun s(src: String, msg: String, t: Throwable? = null) = log(src, msg, Level.ERROR, t)
 
-    private fun log(name: String, msg: String, level: Level) {
+    private fun log(name: String, msg: String, level: Level, t: Throwable? = null) {
         val logger = handlers[name] ?: run {
             // We couldn't find an existing logger, so lets make a new one
             val newLogger = LoggerFactory.getLogger(name)
@@ -186,13 +206,13 @@ object Log {
             return@run newLogger
         }
         when(level) {
-            Level.TRACE -> logger.trace(msg)
-            Level.DEBUG -> logger.debug(msg)
-            Level.INFO -> logger.info(msg)
-            Level.WARN -> logger.warn(msg)
-            Level.ERROR -> logger.error(msg)
+            Level.TRACE -> logger.trace(msg, t)
+            Level.DEBUG -> logger.debug(msg, t)
+            Level.INFO -> logger.info(msg, t)
+            Level.WARN -> logger.warn(msg, t)
+            Level.ERROR -> logger.error(msg, t)
             // assume info if we don't recognise the level
-            else -> logger.info(msg)
+            else -> logger.info(msg, t)
         }
     }
 

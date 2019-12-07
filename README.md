@@ -1,27 +1,36 @@
 # LOG2
 
-Log2 is a simple library for showing pretty log statements.
+Log2 is a library for simplifying logging. It uses Slf4j internally and therefore will not interfere with any custom logging solutions.
 
-It is written in Kotlin and therefore should be fully interoperable with Java
+It is written in Kotlin and therefore should be fully interoperable with Java. 
+If you are using ONLY Java, I'd recommend using Lombok's `@Slf4j` annotation instead.
 
-Log2 is a rewrite of a project by the same name ([Log2](https://gitlab.com/django-sandbox/log2))
-### Download
+Log2 is designed at the Java 11 language level and therefore may or may not work in lower versions of Java. YMMV.
+
+### Setup
 
 Gradle:
 
 1. In your root build.gradle
-```gradle
-allprojects {
-    repositories {
-        ...
-        maven { url 'https://jitpack.io' }
-    }
+```groovy
+repositories {
+    maven { url 'https://jitpack.io' }
+}
+```
+```kotlin
+repositories {
+    maven(url = "https://jitpack.io")
 }
 ```
 2. In your project build.gradle
-```gradle
+```groovy
 dependencies {
-    implementation 'com.github.djcass44:log2:3.0'
+    implementation 'com.github.djcass44:log2:4.1'
+}
+```
+```kotlin
+dependencies {
+    implementation("com.github.djcass44:log2:4.1")
 }
 ```
 Maven:
@@ -40,7 +49,7 @@ Maven:
 <dependency>
     <groupId>com.github.djcass44</groupId>
     <artifactId>log2</artifactId>
-    <version>3.0</version>
+    <version>4.1</version>
 </dependency>
 ```
 
@@ -50,15 +59,20 @@ Maven:
 Log.e(javaClass, "An error occurred!")
 // Will print 
 // 1970-01-01 00:00:00 000 | [main] |-ERROR in org.example.test.TestLog - An error occurred!
+// kotlin extensions
+"An error has occurred!".loge(javaClass)
+try {
+    something.throwsErr()
+}
+catch (e: Exception) {
+    // include a throwable to print to console
+    "Caught exception in somemethod".logf(javaClass, e)
+}
 ```
-
-**Additional options**
-
-```Log.USE_SHORT_COLOURS```(default: true): Only colour the part of the log which shows severity
 
 ### License
 
-Log2 is releasesed under the [Apache 2.0 license](LICENSE)
+Log2 is released under the [Apache 2.0 license](LICENSE)
 ```
 Copyright 2019 Django Cass
 

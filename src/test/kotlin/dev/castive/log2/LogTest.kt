@@ -31,4 +31,12 @@ class LogTest {
         Log.f(javaClass, "Fatal error test")
         Log.s(javaClass, "Silent test")
     }
+
+    @Test
+    fun `test exceptions are handled correctly`() {
+        val e = Exception("Test exception")
+
+        Log.i(javaClass, "Info test", e)
+        "Info test 2".logi(javaClass, e)
+    }
 }

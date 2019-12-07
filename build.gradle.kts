@@ -24,7 +24,7 @@ plugins {
 }
 
 group = "dev.castive"
-version = "4.0"
+version = "4.1"
 val moduleName by extra("dev.castive.log2")
 val javaHome: String = System.getProperty("java.home")
 
@@ -36,11 +36,17 @@ repositories {
 
 dependencies {
     implementation(kotlin("stdlib-jdk8"))
-    implementation("org.slf4j:slf4j-simple:1.7.29")
 
-    testImplementation("org.junit.jupiter:junit-jupiter-api:5.2.0")
-    testImplementation("org.junit.jupiter:junit-jupiter-params:5.2.0")
-    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.2.0")
+    val slfVersion = "1.7.29"
+    implementation("org.slf4j:slf4j-api:$slfVersion")
+
+
+    testImplementation("org.slf4j:slf4j-simple:$slfVersion")
+
+    val junitVersion = "5.5.2"
+    testImplementation("org.junit.jupiter:junit-jupiter-api:$junitVersion")
+    testImplementation("org.junit.jupiter:junit-jupiter-params:$junitVersion")
+    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:$junitVersion")
 }
 configure<JavaPluginConvention> {
     sourceCompatibility = JavaVersion.VERSION_11
@@ -48,8 +54,8 @@ configure<JavaPluginConvention> {
 }
 tasks {
     withType<Wrapper> {
-        gradleVersion = "5.6.4"
-        distributionType = Wrapper.DistributionType.BIN
+        gradleVersion = "6.0.1"
+        distributionType = Wrapper.DistributionType.ALL
     }
     withType<KotlinCompile>().all {
         kotlinOptions.jvmTarget = "11"
